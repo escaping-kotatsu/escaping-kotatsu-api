@@ -1,0 +1,11 @@
+version: '3'
+services:
+  db:
+    build: .
+    ports:
+      - 5433:5432
+    environment:
+      POSTGRES_DB: postgres
+      TZ: Asia/Tokyo
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
