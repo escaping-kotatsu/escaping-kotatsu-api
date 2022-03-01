@@ -20,14 +20,8 @@
     "migrate:dev": "DATABASE_URL='postgresql://postgres:postgres@localhost:5433/postgres' npx prisma migrate dev --schema ./src/db/prisma/schema.prisma",
     "start": "node ./dist/index.js",
     "quick": "ts-node ./src/index.ts",
-    "build": "yarn pkg && yarn build-vue && yarn build-api",
-    "build-api": "tsc",
-    "build-vue": "cd ./vue/ && yarn build",
     "test": "jest",
-    "test:debug": "jest --watch",
-    "pkg": "export YARN_PRODUCTION=false && yarn pkg-express && yarn pkg-vue",
-    "pkg-express": "yarn",
-    "pkg-vue": "cd ./vue/ && yarn"
+    "test:debug": "jest --watch"
   },
   "config": {
     "commitizen": {
@@ -66,12 +60,13 @@
     "madge": "^5.0.1",
     "only-allow": "^1.0.0",
     "prettier": "^2.5.1",
+    "prisma": "^3.10.0",
     "readme-md-generator": "^1.0.0",
     "sort-package-json": "^1.53.1",
     "ts-jest": "^27.1.2",
     "ts-node": "^10.4.0",
-    "typedoc": "^0.22.10",
-    "typedoc-plugin-markdown": "^3.11.7",
+    "typedoc": "^0.22.12",
+    "typedoc-plugin-markdown": "^3.11.14",
     "typescript": "^4.5.4"
   }
 }

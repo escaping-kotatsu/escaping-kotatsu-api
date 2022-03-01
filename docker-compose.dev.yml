@@ -1,0 +1,30 @@
+version: "3"
+services:
+  node:
+    container_name: api_express
+    build:
+      context: .
+      dockerfile: ./docker/dev/Dockerfile
+    volumes:
+      - .:/app
+      - /app/node_modules
+    tty:  true
+    ports:
+      - 5000:5000
+    command: "yarn run quick"
+
+  postgres:
+    container_name: postgres
+    image: postgres:13
+    ports:
+      - 5432:5432
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: postgres_db
+    volumes:
+      - db_data:/var/lib/posrgresql/data
+      - ./initdb:/docker-entrypoint-initdb.d
+
+volumes:
+  db_data: {}
