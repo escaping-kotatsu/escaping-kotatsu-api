@@ -88,7 +88,7 @@ app.use(
 );
 
 
-app.use('/', proxy('localhost:8080'));
+app.use('/', proxy('front_vue:8080'));
 
 const welcome = (p: number) => (): void => L.info(`up and running @: ${os.hostname()} on port: ${p}}`);
 http.createServer(app).listen(PORT, welcome(PORT));

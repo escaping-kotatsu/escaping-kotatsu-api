@@ -7,17 +7,23 @@ services:
       dockerfile: ./docker/dev/Dockerfile
     volumes:
       - .:/app
-      - /app/node_modules
     tty:  true
+    depends_on:
+      - postgres
+    networks:
+      - default
+      - kotatsu-network
     ports:
       - 5000:5000
+    environment:
+      DATABASE_URL: postgresql://postgres:password@localhost:5432/postgres_db
     command: "yarn run quick"
 
   postgres:
     container_name: postgres
     image: postgres:13
     ports:
-      - 5432:5432
+      - 5433:5432
     environment:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: password
@@ -28,3 +34,7 @@ services:
 
 volumes:
   db_data: {}
+
+networks:
+  kotatsu-network:
+    external: true

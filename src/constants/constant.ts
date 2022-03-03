@@ -2,7 +2,7 @@
 
 export const PORT = parseInt(process.env.PORT || '5000');
 export const DOMAIN = process.env.DOMAIN || 'localhost:5000';
-export const DATABASE_URL_DEV = 'postgresql://postgres:postgres@localhost:5433/postgres'; // from src/db/docker-compose.yaml
+export const DATABASE_URL_DEV = 'postgresql://postgres:password@localhost:5432/postgres_db';
 export const DATABASE_URL = process.env.DATABASE_URL || DATABASE_URL_DEV;
 export const SESSION_SECRET = process.env.SESSION_SECRET || 'secret';
 export const SESSION_AGE = parseInt(process.env.PORT || `${1000 * 60 * 60 * 24 * 7}`); // one week
