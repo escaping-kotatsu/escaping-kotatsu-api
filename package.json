@@ -12,6 +12,7 @@
   },
   "scripts": {
     "preinstall": "npx only-allow yarn",
+    "build": "prisma generate --schema ./src/db/prisma/schema.prisma && tsc",
     "commit": "git cz",
     "lint": "tsc --noEmit && eslint ./src/*.ts --config ./.eslintrc.js --no-ignore --cache --color",
     "ignore": "curl https://raw.githubusercontent.com/github/gitignore/master/Node.gitignore -o ./.gitignore",
@@ -38,7 +39,8 @@
     "graphql": "^16.0.1",
     "helmet": "^4.6.0",
     "morgan": "^1.10.0",
-    "pino": "^7.1.0"
+    "pino": "^7.1.0",
+    "prisma": "^3.10.0"
   },
   "devDependencies": {
     "@types/cookie-parser": "^1.4.2",
@@ -60,7 +62,6 @@
     "madge": "^5.0.1",
     "only-allow": "^1.0.0",
     "prettier": "^2.5.1",
-    "prisma": "^3.10.0",
     "readme-md-generator": "^1.0.0",
     "sort-package-json": "^1.53.1",
     "ts-jest": "^27.1.2",
