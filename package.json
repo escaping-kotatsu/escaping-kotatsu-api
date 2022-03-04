@@ -1,5 +1,5 @@
 {
-  "name": "nl-base",
+  "name": "escaping-kotatsu-api",
   "version": "0.0.1",
   "description": "We make possible escaping of Kotatsu for Shinshu residents!",
   "main": "src/index.ts",
