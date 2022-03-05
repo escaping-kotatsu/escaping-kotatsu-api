@@ -1,7 +1,7 @@
 'use strict';
 
 export const PORT = parseInt(process.env.PORT || '5000');
-export const DOMAIN = process.env.DOMAIN || 'localhost:5000';
+export const DOMAIN = process.env.DOMAIN || 'localhost';
 export const DATABASE_URL_DEV = 'postgresql://postgres:password@localhost:5432/postgres_db';
 export const DATABASE_URL = process.env.DATABASE_URL || DATABASE_URL_DEV;
 export const SESSION_SECRET = process.env.SESSION_SECRET || 'secret';
@@ -21,6 +21,6 @@ export const COOKIE_OPTIONS: {
   domain: DOMAIN,
   httpOnly: true,
   secure: true,
-  sameSite: 'strict',
+  sameSite: DATABASE_URL == DATABASE_URL_DEV ? 'none' : 'strict',
   maxAge: SESSION_AGE,
 };

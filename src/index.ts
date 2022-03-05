@@ -22,8 +22,10 @@ import {
 import { authMiddleware, loginAPI } from './middleware/auth.middleware';
 import { init } from './utils/init';
 import { iotRouter } from './router/iot';
+import { userRouter } from './router/user';
 
 createConnection().then(async () => {
+  await init();
   const app = express();
 
   app.set('appPath', `${__dirname}client`);
@@ -75,16 +77,14 @@ createConnection().then(async () => {
   app.use(express.urlencoded({ extended: true }));
 
   app.post('/login', loginAPI);
-  app.use('/api', authMiddleware);
   app.use('/iot', iotRouter);
+  app.use('/api', authMiddleware);
+  app.use('/api/user', userRouter);
 
   if (DATABASE_URL !== DATABASE_URL_DEV) {
     app.use('/', proxy(STATIC_VUE_SERVER));
   }
 
-  const welcome = (p: number) => (): void => {
-    L.info(`up and running @: ${os.hostname()} on port: ${p}}`);
-    init();
-  };
+  const welcome = (p: number) => (): void => L.info(`up and running @: ${os.hostname()} on port: ${p}}`);
   http.createServer(app).listen(PORT, welcome(PORT));
 });

@@ -3,10 +3,10 @@
 import L from '../utils/logger';
 import { Request, Response, NextFunction } from 'express';
 import { COOKIE_OPTIONS } from '../constants/constant';
-import { UserModel } from '../../db/models/user.model';
+import { UserService } from '../service/user.service';
 
 export const authMiddleware = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
-  new UserModel();
+  const userService = new UserService();
 
   if (!('session' in req.cookies)) {
     res.status(401).json({ message: 'could u set secret?' });
@@ -14,14 +14,15 @@ export const authMiddleware = async (req: Request, res: Response, next: NextFunc
   }
 
   try {
-    // const user = await userModel.getBySession(req.cookies['session']);
-    const user = { name: 'aaa' };
+    const user = await userService.getBySession(req.cookies['session']);
 
     if (!user) {
       res.status(401).json({ message: 'invalid session' });
       return;
     }
 
+    delete user.hash;
+    delete user.session;
     res.locals.user = user;
   } catch (err) {
     L.error(err);
@@ -33,14 +34,13 @@ export const authMiddleware = async (req: Request, res: Response, next: NextFunc
 };
 
 export const loginAPI = async (req: Request, res: Response) => {
-  // const hitUser = await userModel.getByAuthInfo(req.body.name, req.body.pass);
-  const hitUser = { name: 'aaa' }
+  const userService = new UserService();
+  const hitUser = await userService.getByAuthInfo(req.body.name, req.body.pass);
 
   if (hitUser) {
-    // const sessionUuid = await userModel.enableSession(req.body.name);
-    const sessionUuid = 'aaa';
+    const sessionUuid = await userService.enableSession(hitUser);
     res.cookie('session', sessionUuid, COOKIE_OPTIONS).json({ message: 'login successful' });
   } else {
-    res.send('user not found');
+    res.status(404).send({ message: 'user not found' });
   }
 };
