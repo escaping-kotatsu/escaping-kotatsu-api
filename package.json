@@ -19,7 +19,7 @@
     "readme": "npx readme-md-generator",
     "doc": "typedoc --plugin typedoc-plugin-markdown --out ./docs/ ./src/*.ts && npx madge --image ./graph.svg ./src/index.ts",
     "start": "node ./dist/index.js",
-    "quick": "ts-node ./src/index.ts",
+    "quick": "nodemon ./src/index.ts",
     "test": "jest",
     "test:debug": "jest --watch"
   },
@@ -36,9 +36,10 @@
     "express-session": "^1.17.2",
     "graphql": "^16.0.1",
     "helmet": "^4.6.0",
-    "mongoose": "^6.2.4",
     "morgan": "^1.10.0",
+    "pg": "^8.7.3",
     "pino": "^7.1.0",
+    "typeorm": "^0.2.45",
     "uuid": "^8.3.2"
   },
   "devDependencies": {
@@ -62,6 +63,7 @@
     "eslint-plugin-prettier": "^4.0.0",
     "jest": "^27.4.5",
     "madge": "^5.0.1",
+    "nodemon": "^2.0.15",
     "only-allow": "^1.0.0",
     "prettier": "^2.5.1",
     "readme-md-generator": "^1.0.0",

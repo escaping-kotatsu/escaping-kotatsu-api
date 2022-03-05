@@ -9,27 +9,27 @@ services:
       - .:/app
     tty:  true
     depends_on:
-      - mongo
+      - postgres
     networks:
       - default
       - kotatsu-network
     ports:
       - 5000:5000
     environment:
-      DATABASE_URL: mongodb://dev:dev_pw@mongo:27017/kotatsu
+      DATABASE_URL: postgresql://postgres:password@postgres:5432/postgres_db
     command: "yarn run quick"
 
-  mongo:
-    image: mongo
-    restart: always
-    environment:
-      MONGO_INITDB_ROOT_USERNAME: dev
-      MONGO_INITDB_ROOT_PASSWORD: dev_pw
+  postgres:
+    container_name: postgres
+    image: postgres:13
     ports:
-      - 27017:27017
+      - 5433:5432
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: postgres_db
     volumes:
-      - ./db:/data/db
-      - ./configdb:/data/configdb
+      - db_data:/var/lib/posrgresql/data
 
 volumes:
   db_data: {}

@@ -3,11 +3,11 @@
 import L from '../utils/logger';
 import { Request, Response, NextFunction } from 'express';
 import { COOKIE_OPTIONS } from '../constants/constant';
-// import { UserModel } from '../db/model/user.model';
-
-// const userModel = new UserModel();
+import { UserModel } from '../../db/models/user.model';
 
 export const authMiddleware = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+  new UserModel();
+
   if (!('session' in req.cookies)) {
     res.status(401).json({ message: 'could u set secret?' });
     return;
@@ -32,13 +32,13 @@ export const authMiddleware = async (req: Request, res: Response, next: NextFunc
   next();
 };
 
-export const loginAPI = async(req: Request, res: Response) => {
+export const loginAPI = async (req: Request, res: Response) => {
   // const hitUser = await userModel.getByAuthInfo(req.body.name, req.body.pass);
-  const hitUser = true;
+  const hitUser = { name: 'aaa' }
+
   if (hitUser) {
-    // userModel.enableSession(req.body.name);
     // const sessionUuid = await userModel.enableSession(req.body.name);
-    const sessionUuid = 'uuid';
+    const sessionUuid = 'aaa';
     res.cookie('session', sessionUuid, COOKIE_OPTIONS).json({ message: 'login successful' });
   } else {
     res.send('user not found');
