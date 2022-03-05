@@ -32,7 +32,7 @@ export const authMiddleware = async (req: Request, res: Response, next: NextFunc
 };
 
 export const loginAPI = async(req: Request, res: Response) => {
-  const hitUser = await userModel.userExist(req.body.name, req.body.pass);
+  const hitUser = await userModel.getByAuthInfo(req.body.name, req.body.pass);
   if (hitUser) {
     userModel.enableSession(req.body.name);
     const sessionUuid = await userModel.enableSession(req.body.name);

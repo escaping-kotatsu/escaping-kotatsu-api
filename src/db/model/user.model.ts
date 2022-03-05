@@ -31,19 +31,19 @@ export class UserModel extends Model {
     });
   };
 
-  public async userExist(name: string, pass: string): Promise<User> {
-    const hitUser = await this.client.user.findUnique({
+  public async getByAuthInfo(name: string, pass: string): Promise<User> {
+    const user = await this.client.user.findUnique({
       where: {
         name,
       },
     });
 
-    if( !hitUser ) {
+    if(!user) {
       return null;
     }
 
-    if (hashCompare(pass, hitUser.hash)) {
-      return hitUser;
+    if (hashCompare(pass, user.hash)) {
+      return user;
     } else {
       return null;
     }

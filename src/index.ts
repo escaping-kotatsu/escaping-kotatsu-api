@@ -12,10 +12,16 @@ import morgan from 'morgan';
 import cookieParser from 'cookie-parser';
 import { buildSchema } from 'graphql';
 
-import { PORT, SESSION_SECRET, COOKIE_OPTIONS, DATABASE_URL_DEV, DATABASE_URL, STATIC_VUE_SERVER } from './constants/constant';
+import {
+  PORT,
+  SESSION_SECRET,
+  COOKIE_OPTIONS,
+  DATABASE_URL_DEV,
+  DATABASE_URL,
+  STATIC_VUE_SERVER,
+} from './constants/constant';
 import { authMiddleware, loginAPI } from './middleware/auth.middleware';
-import { init } from './utils/init'
-init()
+import { init } from './utils/init';
 
 const app = express();
 
@@ -89,8 +95,9 @@ app.use(
   })
 );
 
-
 app.use('/', proxy(STATIC_VUE_SERVER));
 
 const welcome = (p: number) => (): void => L.info(`up and running @: ${os.hostname()} on port: ${p}}`);
 http.createServer(app).listen(PORT, welcome(PORT));
+
+init();

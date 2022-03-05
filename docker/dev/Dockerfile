@@ -7,4 +7,7 @@ RUN apk add yarn
 
 ADD package.json ./
 
+COPY . .
+
 RUN yarn install
+RUN yarn run build
