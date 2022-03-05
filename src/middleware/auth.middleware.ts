@@ -31,6 +31,13 @@ export const authMiddleware = async (req: Request, res: Response, next: NextFunc
   next();
 };
 
-export const loginAPI = (req: Request, res: Response): void => {
-  res.cookie('session', 'aaa', COOKIE_OPTIONS).json({ message: 'login successful' });
+export const loginAPI = async(req: Request, res: Response) => {
+  const hitUser = await userModel.userExist(req.body.name, req.body.pass);
+  if (hitUser) {
+    userModel.enableSession(req.body.name);
+    const sessionUuid = await userModel.enableSession(req.body.name);
+    res.cookie('session', sessionUuid, COOKIE_OPTIONS).json({ message: 'login successful' });
+  } else {
+    res.send('user not found');
+  }
 };
