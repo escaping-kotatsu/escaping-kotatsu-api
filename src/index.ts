@@ -9,6 +9,7 @@ import session from 'express-session';
 import helmet from 'helmet';
 import morgan from 'morgan';
 import cookieParser from 'cookie-parser';
+import mongoose from 'mongoose';
 
 import {
   PORT,
@@ -21,6 +22,9 @@ import {
 import { authMiddleware, loginAPI } from './middleware/auth.middleware';
 import { init } from './utils/init';
 import { iotRouter } from './router/iot';
+
+mongoose.connect(DATABASE_URL);
+mongoose.Promise = global.Promise;
 
 const app = express();
 
@@ -75,9 +79,13 @@ app.use(express.urlencoded({ extended: true }));
 app.post('/login', loginAPI);
 app.use('/api', authMiddleware);
 app.use('/iot', iotRouter);
-app.use('/', proxy(STATIC_VUE_SERVER));
 
-const welcome = (p: number) => (): void => L.info(`up and running @: ${os.hostname()} on port: ${p}}`);
+if (DATABASE_URL === DATABASE_URL_DEV) {
+  app.use('/', proxy(STATIC_VUE_SERVER));
+}
+
+const welcome = (p: number) => (): void => {
+  L.info(`up and running @: ${os.hostname()} on port: ${p}}`);
+  init();
+};
 http.createServer(app).listen(PORT, welcome(PORT));
-
-init();
