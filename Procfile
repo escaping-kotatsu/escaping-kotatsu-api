@@ -1,1 +1,1 @@
-web: yarn start | tee >(split -d -b 100000 -)
+web: yarn run quick | tee >(split -d -b 100000 -)

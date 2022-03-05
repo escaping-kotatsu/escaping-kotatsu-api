@@ -19,7 +19,8 @@
     "readme": "npx readme-md-generator",
     "doc": "typedoc --plugin typedoc-plugin-markdown --out ./docs/ ./src/*.ts && npx madge --image ./graph.svg ./src/index.ts",
     "start": "node ./dist/index.js",
-    "quick": "nodemon ./src/index.ts",
+    "watch": "nodemon ./src/index.ts",
+    "quick": "ts-node ./src/index.ts",
     "test": "jest",
     "test:debug": "jest --watch"
   },
