@@ -2,10 +2,10 @@
 
 import L from '../utils/logger';
 import { Request, Response, NextFunction } from 'express';
-import { SESSION_SECRET, COOKIE_OPTIONS } from '../constants/constant';
-import { UserModel } from '../db/model/user.model';
+import { COOKIE_OPTIONS } from '../constants/constant';
+// import { UserModel } from '../db/model/user.model';
 
-const userModel = new UserModel();
+// const userModel = new UserModel();
 
 export const authMiddleware = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
   if (!('session' in req.cookies)) {
@@ -14,7 +14,8 @@ export const authMiddleware = async (req: Request, res: Response, next: NextFunc
   }
 
   try {
-    const user = await userModel.getBySession(req.cookies['session']);
+    // const user = await userModel.getBySession(req.cookies['session']);
+    const user = { name: 'aaa' };
 
     if (!user) {
       res.status(401).json({ message: 'invalid session' });
@@ -32,10 +33,12 @@ export const authMiddleware = async (req: Request, res: Response, next: NextFunc
 };
 
 export const loginAPI = async(req: Request, res: Response) => {
-  const hitUser = await userModel.getByAuthInfo(req.body.name, req.body.pass);
+  // const hitUser = await userModel.getByAuthInfo(req.body.name, req.body.pass);
+  const hitUser = true;
   if (hitUser) {
-    userModel.enableSession(req.body.name);
-    const sessionUuid = await userModel.enableSession(req.body.name);
+    // userModel.enableSession(req.body.name);
+    // const sessionUuid = await userModel.enableSession(req.body.name);
+    const sessionUuid = 'uuid';
     res.cookie('session', sessionUuid, COOKIE_OPTIONS).json({ message: 'login successful' });
   } else {
     res.send('user not found');

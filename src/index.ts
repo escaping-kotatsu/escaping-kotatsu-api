@@ -5,12 +5,10 @@ import os from 'os';
 import http from 'http';
 import express from 'express';
 import proxy from 'express-http-proxy';
-import { graphqlHTTP } from 'express-graphql';
 import session from 'express-session';
 import helmet from 'helmet';
 import morgan from 'morgan';
 import cookieParser from 'cookie-parser';
-import { buildSchema } from 'graphql';
 
 import {
   PORT,
@@ -22,6 +20,7 @@ import {
 } from './constants/constant';
 import { authMiddleware, loginAPI } from './middleware/auth.middleware';
 import { init } from './utils/init';
+import { iotRouter } from './router/iot';
 
 const app = express();
 
@@ -75,26 +74,7 @@ app.use(express.urlencoded({ extended: true }));
 
 app.post('/login', loginAPI);
 app.use('/api', authMiddleware);
-
-// GraphQL schema
-const schema = buildSchema(`
- type Query {
- message: String
- }
-`);
-// Root resolver
-const root = {
-  message: () => 'Hello World!',
-};
-app.use(
-  '/graphql',
-  graphqlHTTP({
-    schema: schema,
-    rootValue: root,
-    graphiql: true,
-  })
-);
-
+app.use('/iot', iotRouter);
 app.use('/', proxy(STATIC_VUE_SERVER));
 
 const welcome = (p: number) => (): void => L.info(`up and running @: ${os.hostname()} on port: ${p}}`);

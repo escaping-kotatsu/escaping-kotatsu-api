@@ -12,15 +12,14 @@
   },
   "scripts": {
     "preinstall": "npx only-allow yarn",
-    "build": "prisma generate --schema ./src/db/prisma/schema.prisma && tsc",
+    "build": "tsc",
     "commit": "git cz",
     "lint": "tsc --noEmit && eslint ./src/*.ts --config ./.eslintrc.js --no-ignore --cache --color",
     "ignore": "curl https://raw.githubusercontent.com/github/gitignore/master/Node.gitignore -o ./.gitignore",
     "readme": "npx readme-md-generator",
     "doc": "typedoc --plugin typedoc-plugin-markdown --out ./docs/ ./src/*.ts && npx madge --image ./graph.svg ./src/index.ts",
-    "migrate:dev": "DATABASE_URL='postgresql://postgres:postgres@localhost:5433/postgres' npx prisma migrate dev --schema ./src/db/prisma/schema.prisma",
     "start": "node ./dist/index.js",
-    "quick": "prisma migrate deploy --schema ./src/db/prisma/schema.prisma && ts-node ./src/index.ts",
+    "quick": "ts-node ./src/index.ts",
     "test": "jest",
     "test:debug": "jest --watch"
   },
@@ -30,18 +29,15 @@
     }
   },
   "dependencies": {
-    "@prisma/client": "^3.4.1",
     "bcryptjs": "^2.4.3",
     "cookie-parser": "^1.4.5",
     "express": "^4.17.1",
-    "express-graphql": "^0.12.0",
     "express-http-proxy": "^1.6.3",
     "express-session": "^1.17.2",
     "graphql": "^16.0.1",
     "helmet": "^4.6.0",
     "morgan": "^1.10.0",
     "pino": "^7.1.0",
-    "prisma": "^3.10.0",
     "uuid": "^8.3.2"
   },
   "devDependencies": {
