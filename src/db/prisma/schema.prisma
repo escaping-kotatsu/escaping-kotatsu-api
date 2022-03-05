@@ -19,3 +19,13 @@ model User {
   updatedAt DateTime @updatedAt
   createdAt DateTime @default(now())
 }
+
+model Kotatsu {
+  id        Int      @default(autoincrement()) @id
+  pulling   Boolean  @default(true)
+  pullTimer Int      @default(5)
+  pullTime  DateTime?
+  using     Boolean  @default(true)
+  updatedAt DateTime @updatedAt
+  createdAt DateTime @default(now())
+}
