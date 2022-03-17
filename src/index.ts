@@ -3,6 +3,7 @@
 import L from './utils/logger';
 import os from 'os';
 import http from 'http';
+import { spawn } from 'child_process';
 import express from 'express';
 import proxy from 'express-http-proxy';
 import session from 'express-session';
@@ -11,14 +12,7 @@ import morgan from 'morgan';
 import cookieParser from 'cookie-parser';
 import { createConnection } from 'typeorm';
 
-import {
-  PORT,
-  SESSION_SECRET,
-  COOKIE_OPTIONS,
-  DATABASE_URL_DEV,
-  DATABASE_URL,
-  STATIC_VUE_SERVER,
-} from './constants/constant';
+import { PORT, SESSION_SECRET, COOKIE_OPTIONS, DATABASE_URL_DEV, DATABASE_URL } from './constants/constant';
 import { authMiddleware, loginAPI } from './middleware/auth.middleware';
 import { init } from './utils/init';
 import { iotRouter } from './router/iot';
@@ -81,10 +75,18 @@ createConnection().then(async () => {
   app.use('/api', authMiddleware);
   app.use('/api/user', userRouter);
 
-  if (DATABASE_URL !== DATABASE_URL_DEV) {
-    app.use('/', proxy(STATIC_VUE_SERVER));
-  }
+  app.use('/', proxy(`localhost:${PORT + 1}`));
 
-  const welcome = (p: number) => (): void => L.info(`up and running @: ${os.hostname()} on port: ${p}}`);
+  const welcome = (p: number) => (): void => {
+    L.info(`up and running @: ${os.hostname()} on port: ${p}}`);
+
+    const envArgStr = DATABASE_URL === DATABASE_URL_DEV ? 'development' : 'production';
+    L.info(`front_cmd: yarn run serve --mode ${envArgStr} --port ${p + 1}`);
+
+    const proc = spawn('yarn', ['run', 'serve', '--mode', envArgStr, '--port', `${p + 1}`], { cwd: './vue' });
+    proc.stdout.on('data', (data) => {
+      L.info(data.toString());
+    });
+  };
   http.createServer(app).listen(PORT, welcome(PORT));
 });
