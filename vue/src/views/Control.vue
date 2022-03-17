@@ -32,8 +32,6 @@ import { Component, Vue } from 'vue-property-decorator';
 import axios from 'axios';
 import dayjs from 'dayjs';
 
-import { HOST } from '../utils/host';
-
 @Component({})
 export default class ControlComponent extends Vue {
   private pullTime = '15:00';
@@ -44,15 +42,15 @@ export default class ControlComponent extends Vue {
 
   private async mounted() {
     try {
-      const result = await axios.get(`${HOST}/api/user/info`);
+      const result = await axios.get('/api/user/info');
       if ('name' in result.data) {
         console.log('already logged in!');
       }
     } catch (error) {
-      location.href = `${HOST}/`;
+      location.href = '/';
     }
 
-    const kotatsuStatus = await axios.get(`${HOST}/iot/kotatsu/1/status`);
+    const kotatsuStatus = await axios.get('/iot/kotatsu/1/status');
     this.pullTime = this.unixTimeToUIFormat(`${kotatsuStatus.data['pull_time']}`);
     this.pullTimer = parseInt(kotatsuStatus.data['pull_timer']);
     this.toggleBtnTitle = !kotatsuStatus.data['pulling'] ? this.pullMsg : this.stopMsg;
@@ -69,7 +67,7 @@ export default class ControlComponent extends Vue {
   }
 
   private async pull() {
-    const res = await axios.post(`${HOST}/api/user/pulling/toggle/1`);
+    const res = await axios.post('/api/user/pulling/toggle/1');
     this.toggleBtnTitle = !res.data['pulling'] ? this.pullMsg : this.stopMsg;
   }
 
@@ -77,7 +75,7 @@ export default class ControlComponent extends Vue {
     const pullTimeHM = this.pullTime.split(':');
     const pullTime = dayjs().set('hours', parseInt(pullTimeHM[0])).set('minutes', parseInt(pullTimeHM[1])).unix();
     try {
-      await axios.post(`${HOST}/api/user/update/config/1/${pullTime}/${this.pullTimer}`);
+      await axios.post(`/api/user/update/config/1/${pullTime}/${this.pullTimer}`);
       alert('保存完了!');
     } catch (error) {
       alert(`エラーが発生しました。 ${error}`);

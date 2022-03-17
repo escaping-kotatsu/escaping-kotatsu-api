@@ -30,8 +30,6 @@
 import { Component, Vue } from 'vue-property-decorator';
 import axios from 'axios';
 
-import { HOST } from '../utils/host';
-
 @Component({})
 export default class LoginComponent extends Vue {
   private userName = '';
@@ -39,9 +37,9 @@ export default class LoginComponent extends Vue {
 
   private async created() {
     try {
-      const result = await axios.get(`${HOST}/api/user/info`);
+      const result = await axios.get('/api/user/info');
       if ('name' in result.data) {
-        location.href = `${HOST}/control`;
+        location.href = '/control';
       }
     } catch (error) {
       console.log('need to login'); // eslint-disable-this-line no-console
@@ -50,9 +48,9 @@ export default class LoginComponent extends Vue {
 
   private async login() {
     try {
-      const result = await axios.post(`${HOST}/login`, { name: this.userName, pass: this.password });
+      const result = await axios.post('/login', { name: this.userName, pass: this.password });
       if ('name' in result.data) {
-        location.href = `${HOST}/control`;
+        location.href = '/control';
       }
     } catch (error) {
       alert(`ログインに失敗しました。${error}`);
