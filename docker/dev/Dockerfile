@@ -10,4 +10,3 @@ ADD package.json ./
 COPY . .
 
 RUN yarn run pkg
-RUN yarn run build
