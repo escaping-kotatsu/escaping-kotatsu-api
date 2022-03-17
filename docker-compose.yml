@@ -4,7 +4,7 @@ services:
     container_name: api_express
     build:
       context: .
-      dockerfile: ./docker/dev/Dockerfile
+      dockerfile: ./Dockerfile.dev
     volumes:
       - .:/app
     tty:  true
@@ -12,12 +12,11 @@ services:
       - postgres
     networks:
       - default
-      - kotatsu-network
     ports:
       - 5000:5000
     environment:
       DATABASE_URL: postgresql://postgres:password@postgres:5432/postgres_db
-    command: "yarn run quick"
+    command: "yarn run watch"
 
   postgres:
     container_name: postgres
@@ -33,7 +32,3 @@ services:
 
 volumes:
   db_data: {}
-
-networks:
-  kotatsu-network:
-    external: true

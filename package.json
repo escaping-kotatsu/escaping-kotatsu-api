@@ -8,11 +8,13 @@
   "private": true,
   "engines": {
     "yarn": ">=1.22.4",
-    "node": "14.17.0"
+    "node": "16.4.2"
   },
   "scripts": {
     "preinstall": "npx only-allow yarn",
-    "build": "tsc",
+    "build": "yarn pkg && yarn build-api",
+    "build-api": "tsc",
+    "build-vue": "cd ./vue/ && yarn build",
     "commit": "git cz",
     "lint": "tsc --noEmit && eslint ./src/*.ts --config ./.eslintrc.js --no-ignore --cache --color",
     "ignore": "curl https://raw.githubusercontent.com/github/gitignore/master/Node.gitignore -o ./.gitignore",
@@ -22,7 +24,10 @@
     "watch": "nodemon ./src/index.ts",
     "quick": "ts-node ./src/index.ts",
     "test": "jest",
-    "test:debug": "jest --watch"
+    "test:debug": "jest --watch",
+    "pkg": "export YARN_PRODUCTION=false && yarn pkg-express && yarn pkg-vue",
+    "pkg-express": "yarn",
+    "pkg-vue": "cd ./vue && yarn"
   },
   "config": {
     "commitizen": {
