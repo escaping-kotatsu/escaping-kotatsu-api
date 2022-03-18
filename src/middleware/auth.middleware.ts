@@ -2,7 +2,6 @@
 
 import L from '../utils/logger';
 import { Request, Response, NextFunction } from 'express';
-import { COOKIE_OPTIONS } from '../constants/constant';
 import { UserService } from '../service/user.service';
 
 export const authMiddleware = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
@@ -31,16 +30,4 @@ export const authMiddleware = async (req: Request, res: Response, next: NextFunc
   }
 
   next();
-};
-
-export const loginAPI = async (req: Request, res: Response) => {
-  const userService = new UserService();
-  const hitUser = await userService.getByAuthInfo(req.body.name, req.body.pass);
-
-  if (hitUser) {
-    const sessionUuid = await userService.enableSession(hitUser);
-    res.cookie('session', sessionUuid, COOKIE_OPTIONS).json({ message: 'login successful' });
-  } else {
-    res.status(404).send({ message: 'user not found' });
-  }
 };

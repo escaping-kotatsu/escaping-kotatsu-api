@@ -13,7 +13,8 @@ import cookieParser from 'cookie-parser';
 import { createConnection } from 'typeorm';
 
 import { PORT, SESSION_SECRET, COOKIE_OPTIONS, DATABASE_URL_DEV, DATABASE_URL } from './constants/constant';
-import { authMiddleware, loginAPI } from './middleware/auth.middleware';
+import { authMiddleware } from './middleware/auth.middleware';
+import { loginAPI } from './utils/login';
 import { init } from './utils/init';
 import { iotRouter } from './router/iot';
 import { userRouter } from './router/user';

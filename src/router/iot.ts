@@ -1,7 +1,10 @@
 'use strict';
 
 import humps from 'humps';
+import dayjs from 'dayjs';
 import { Router } from 'express';
+import { graphqlHTTP } from 'express-graphql';
+import { buildSchema } from 'graphql';
 import { KotatsuService } from '../service/kotatsu.service';
 
 export const iotRouter = Router();
@@ -15,19 +18,43 @@ const initService = (): void => {
   kotatsuService = new KotatsuService();
 };
 
-iotRouter.get('/kotatsu/:id/status', async (req, res) => {
+const schema = buildSchema(`
+type Query {
+  kotatsu(id: Int): Kotatsu
+},
+type Kotatsu {
+  id: Int,
+  pulling: Boolean,
+  pull_timer: Int,
+  pull_time: Int,
+  using: Boolean,
+  created: String!,
+  updated: String!,
+}
+`);
+
+const getKotatsu = async (args: { id: number }) => {
   initService();
-  if (req.params.id.match(/[^\d]/)) {
-    res.status(400).json({
-      error: 'Invalid: kotatsu id is number',
-    });
+  const result = await kotatsuService.getById(args.id);
+  if (!result) {
     return;
   }
-  const kotatsu = await kotatsuService.getById(parseInt(req.params.id));
-  if (!kotatsu) {
-    res.status(404).json({
-      error: 'this kotatsu is not found',
-    });
-  }
-  res.json(humps.decamelizeKeys(kotatsu));
-});
+  return humps.decamelizeKeys({
+    ...result,
+    created: dayjs(result.created).format(),
+    updated: dayjs(result.updated).format(),
+  });
+};
+
+const root = {
+  kotatsu: getKotatsu,
+};
+
+iotRouter.use(
+  '/kotatsu/graphql',
+  graphqlHTTP({
+    schema: schema,
+    rootValue: root,
+    graphiql: true,
+  })
+);
