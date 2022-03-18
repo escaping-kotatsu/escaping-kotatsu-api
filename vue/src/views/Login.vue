@@ -50,7 +50,7 @@ export default class LoginComponent extends Vue {
     try {
       const result = await axios.post('/login', { name: this.userName, pass: this.password });
       if ('name' in result.data) {
-        location.href = '/control';
+        location.reload();
       }
     } catch (error) {
       alert(`ログインに失敗しました。${error}`);
