@@ -1,0 +1,15 @@
+
+  mutation updateKotatsu($id: Int!, $pullTime: Int!, $pullTimer: Int!) {
+    updateKotatsu(id: $id, pullTime: $pullTime, pullTimer: $pullTimer) {
+      ...kotatsuFields
+    }
+  }
+  fragment kotatsuFields on Kotatsu {
+    id
+    pulling
+    pullTime
+    pullTimer
+    using
+    created
+    updated
+  }

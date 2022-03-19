@@ -1,0 +1,15 @@
+
+  mutation toggleKotatsu($id: Int!) {
+    toggleKotatsu(id: $id) {
+      ...kotatsuFieldsForToggle
+    }
+  }
+  fragment kotatsuFieldsForToggle on Kotatsu {
+    id
+    pulling
+    pullTime
+    pullTimer
+    using
+    created
+    updated
+  }
