@@ -10,6 +10,7 @@ export const KOTATSU_IOT_KEY = process.env.KOTATSU_IOT_KEY || 'secret';
 export const SESSION_AGE = parseInt(process.env.SESSION_AGE || `${1000 * 60 * 60 * 24 * 7}`); // one week
 export const FIRST_USER_NAME = process.env.FIRST_USER_NAME || 'demo-user';
 export const FIRST_USER_PASS = process.env.FIRST_USER_PASS || 'demo-pass';
+export const FIRST_USER_BLE = process.env.FIRST_USER_BLE || '4ac8d5b2-6fa8-4866-a6b2-72e286749ba9';
 export const COOKIE_OPTIONS: {
   domain: string;
   httpOnly: boolean;

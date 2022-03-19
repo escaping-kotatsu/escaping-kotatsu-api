@@ -1,0 +1,30 @@
+type Query {
+  kotatsu(id: Int!): Kotatsu
+  user(name: String): User
+}
+
+type Mutation {
+  updateKotatsu(id: Int!, pullTime: Int!, pullTimer: Int!): Kotatsu
+  toggleKotatsu(id: Int!): Kotatsu
+}
+
+type Kotatsu {
+  id: Int
+  pulling: Boolean
+  pullTimer: Int
+  pullTime: Int
+  using: Boolean
+  created: String
+  updated: String
+}
+
+type User {
+  id: Int
+  name: String
+  ble: String
+  count: Int
+  sitting: Boolean
+  using: Boolean
+  created: String
+  updated: String
+}

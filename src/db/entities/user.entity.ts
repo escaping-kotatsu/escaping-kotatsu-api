@@ -25,6 +25,15 @@ export class UserEntity extends BaseEntity {
   @Column({ name: 'session', nullable: true })
   public session: string;
 
+  @Column({ name: 'ble', default: '', nullable: true })
+  public ble: string;
+
+  @Column({ name: 'sitting', default: false, nullable: true })
+  public sitting: boolean;
+
+  @Column({ name: 'count', default: 0, nullable: true })
+  public count: number;
+
   @Column({ name: 'using', default: true, nullable: false })
   public using: boolean;
 

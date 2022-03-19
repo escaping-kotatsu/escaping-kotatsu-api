@@ -1,7 +1,7 @@
 'use strict';
 
 import L from './logger';
-import { FIRST_USER_NAME, FIRST_USER_PASS } from '../constants/constant';
+import { FIRST_USER_NAME, FIRST_USER_PASS, FIRST_USER_BLE } from '../constants/constant';
 import { UserService } from '../service/user.service';
 import { KotatsuService } from '../service/kotatsu.service';
 
@@ -10,7 +10,7 @@ const initUser = async () => {
   const user = await userService.getByAuthInfo(FIRST_USER_NAME, FIRST_USER_PASS);
   if (!user) {
     L.info('init: demo user');
-    await userService.add(FIRST_USER_NAME, FIRST_USER_PASS);
+    await userService.add(FIRST_USER_NAME, FIRST_USER_PASS, FIRST_USER_BLE);
     return;
   }
   L.info('demo user is exists');

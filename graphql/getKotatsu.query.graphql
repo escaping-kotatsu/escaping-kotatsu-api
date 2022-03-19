@@ -1,0 +1,12 @@
+
+  query getKotatsu($kotatsuID: Int!) {
+    kotatsu(id: $kotatsuID) {
+      id
+      pulling
+      pullTimer
+      pullTime
+      using
+      created
+      updated
+    }
+  }

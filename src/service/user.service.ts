@@ -18,11 +18,15 @@ export class UserService {
     return await this.model.enableSession(user);
   }
 
-  public async add(name: string, pass: string): Promise<UserEntity> {
-    return await this.model.add(name, pass);
+  public async add(name: string, pass: string, ble: string): Promise<UserEntity> {
+    return await this.model.add(name, pass, ble);
   }
 
   public async getByAuthInfo(name: string, pass: string): Promise<UserEntity> {
     return await this.model.getByAuthInfo(name, pass);
+  }
+
+  public async getByName(name: string): Promise<UserEntity> {
+    return await this.model.getByName(name);
   }
 }

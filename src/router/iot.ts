@@ -1,10 +1,14 @@
 'use strict';
 
-import humps from 'humps';
 import dayjs from 'dayjs';
 import { Router } from 'express';
+
 import { graphqlHTTP } from 'express-graphql';
-import { buildSchema } from 'graphql';
+import { buildASTSchema } from 'graphql';
+import 'graphql-import-node';
+import * as schemaFile from '../../schema.graphql';
+import { Query, Kotatsu, QueryKotatsuArgs } from '../../@types/api';
+
 import { KotatsuService } from '../service/kotatsu.service';
 
 export const iotRouter = Router();
@@ -18,43 +22,26 @@ const initService = (): void => {
   kotatsuService = new KotatsuService();
 };
 
-const schema = buildSchema(`
-type Query {
-  kotatsu(id: Int): Kotatsu
-},
-type Kotatsu {
-  id: Int,
-  pulling: Boolean,
-  pull_timer: Int,
-  pull_time: Int,
-  using: Boolean,
-  created: String!,
-  updated: String!,
-}
-`);
-
-const getKotatsu = async (args: { id: number }) => {
+const getKotatsu = async (args: QueryKotatsuArgs): Promise<Kotatsu> => {
   initService();
   const result = await kotatsuService.getById(args.id);
   if (!result) {
     return;
   }
-  return humps.decamelizeKeys({
+  return {
     ...result,
     created: dayjs(result.created).format(),
     updated: dayjs(result.updated).format(),
-  });
-};
-
-const root = {
-  kotatsu: getKotatsu,
+  };
 };
 
 iotRouter.use(
   '/kotatsu/graphql',
   graphqlHTTP({
-    schema: schema,
-    rootValue: root,
+    schema: buildASTSchema(schemaFile),
+    rootValue: {
+      kotatsu: getKotatsu,
+    } as Query,
     graphiql: true,
   })
 );

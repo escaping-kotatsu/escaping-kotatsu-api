@@ -1,3 +1,3 @@
-[escaping-kotatsu-api](README.md) / Exports
+[escaping-kotatsu-console](README.md) / Exports
 
-# escaping-kotatsu-api
+# escaping-kotatsu-console

@@ -1,6 +1,22 @@
 'use strict';
 
+import dayjs from 'dayjs';
 import { Router } from 'express';
+
+import { Request, Response } from 'express';
+import { graphqlHTTP } from 'express-graphql';
+import { buildASTSchema } from 'graphql';
+import 'graphql-import-node';
+import * as schemaFile from '../../schema.graphql';
+import {
+  Query,
+  User,
+  Kotatsu,
+  QueryUserArgs,
+  MutationUpdateKotatsuArgs,
+  MutationToggleKotatsuArgs,
+} from '../../@types/api';
+
 import { UserService } from '../service/user.service';
 import { KotatsuService } from '../service/kotatsu.service';
 
@@ -21,35 +37,77 @@ const initService = (): void => {
   kotatsuService = new KotatsuService();
 };
 
-userRouter.get('/info', async (req, res) => {
+const updateKotatsu = async (args: MutationUpdateKotatsuArgs): Promise<Kotatsu> => {
   initService();
-  res.send(res.locals.user);
-});
-
-userRouter.post('/update/config/:id/:pullTime/:pullTimer', async (req, res) => {
-  initService();
-  if (req.params.id.match(/[^\d]/) || req.params.pullTime.match(/[^\d]/) || req.params.pullTimer.match(/[^\d]/)) {
-    res.status(400).json({
-      error: 'Invalid: kotatsu id, pullTime, pullTimer is number',
-    });
+  const updatedKotatsu = await kotatsuService.updateConfig(args.id, args.pullTime, args.pullTimer);
+  if (!updatedKotatsu) {
     return;
   }
-  await kotatsuService.updateConfig(
-    parseInt(req.params.id),
-    parseInt(req.params.pullTime),
-    parseInt(req.params.pullTimer)
-  );
-  res.send({ message: 'received request' });
-});
+  return {
+    id: updatedKotatsu.id,
+    pullTime: updatedKotatsu.pullTime,
+    pullTimer: updatedKotatsu.pullTimer,
+    pulling: updatedKotatsu.pulling,
+    using: updatedKotatsu.using,
+    created: dayjs(updatedKotatsu.created).format(),
+    updated: dayjs(updatedKotatsu.updated).format(),
+  };
+};
 
-userRouter.post('/pulling/toggle/:id', async (req, res) => {
+const toggleKotatsu = async (args: MutationToggleKotatsuArgs): Promise<Kotatsu> => {
   initService();
-  if (req.params.id.match(/[^\d]/)) {
-    res.status(400).json({
-      error: 'Invalid: kotatsu id is number',
-    });
+  const updatedKotatsu = await kotatsuService.togglePulling(args.id);
+  if (!updatedKotatsu) {
     return;
   }
-  const status = await kotatsuService.togglePulling(parseInt(req.params.id));
-  res.send({ message: 'received request', pulling: status.pulling });
-});
+  return {
+    id: updatedKotatsu.id,
+    pullTime: updatedKotatsu.pullTime,
+    pullTimer: updatedKotatsu.pullTimer,
+    pulling: updatedKotatsu.pulling,
+    using: updatedKotatsu.using,
+    created: dayjs(updatedKotatsu.created).format(),
+    updated: dayjs(updatedKotatsu.updated).format(),
+  };
+};
+
+const getUser = async (args: QueryUserArgs, context: User): Promise<User> => {
+  initService();
+  if (!args.name && context) {
+    return {
+      ...context,
+      created: dayjs(context.created).format(),
+      updated: dayjs(context.updated).format(),
+    };
+  }
+  if (!args.name) {
+    return;
+  }
+  const user = await userService.getByName(args.name);
+  if (!user) {
+    return;
+  }
+  delete user.hash;
+  delete user.session;
+  return {
+    ...user,
+    created: dayjs(user.created).format(),
+    updated: dayjs(user.updated).format(),
+  };
+};
+
+userRouter.use(
+  '/graphql',
+  graphqlHTTP((req: Request, res: Response) => {
+    return {
+      schema: buildASTSchema(schemaFile),
+      context: res.locals.user,
+      graphiql: true,
+      rootValue: {
+        user: getUser,
+        updateKotatsu,
+        toggleKotatsu,
+      } as Query,
+    };
+  })
+);

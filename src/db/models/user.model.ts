@@ -24,11 +24,12 @@ export class UserModel {
     return enabledUser.session;
   }
 
-  public async add(name: string, pass: string): Promise<UserEntity> {
+  public async add(name: string, pass: string, ble: string): Promise<UserEntity> {
     const hashStr = hash(pass);
     const user = await this.repository.save({
       name,
       hash: hashStr,
+      ble,
     });
     return user;
   }
@@ -45,5 +46,15 @@ export class UserModel {
     } else {
       return null;
     }
+  }
+
+  public async getByName(name: string): Promise<UserEntity> {
+    const user = await this.repository.findOne({ name });
+
+    if (!user) {
+      return null;
+    }
+
+    return user;
   }
 }

@@ -1,9 +1,9 @@
-escaping-kotatsu-api / [Exports](modules.md)
+escaping-kotatsu-console / [Exports](modules.md)
 
-# escaping-kotatsu-api
+# escaping-kotatsu-console
+
+## How to develop?
 
 ```bash
-docker network create kotatsu-network
-docker-compose build
-docker-compose up
+docker-compose up --build
 ```

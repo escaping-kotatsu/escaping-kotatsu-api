@@ -1,0 +1,10 @@
+
+  query getUser($userName: String) {
+    user(name: $userName) {
+      id
+      name
+      using
+      created
+      updated
+    }
+  }

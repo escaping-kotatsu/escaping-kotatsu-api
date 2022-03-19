@@ -29,6 +29,9 @@
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator';
 import axios from 'axios';
+import { User, GetUserQueryVariables } from '../../../@types/api';
+import { getUser } from '../../../src/constants/graphql.query';
+import { request } from 'graphql-request';
 
 @Component({})
 export default class LoginComponent extends Vue {
@@ -37,8 +40,9 @@ export default class LoginComponent extends Vue {
 
   private async created() {
     try {
-      const result = await axios.get('/api/user/info');
-      if ('name' in result.data) {
+      const userQueryVal: GetUserQueryVariables = { userName: null };
+      const userStatus = await request<{ user: User }>('/api/user/graphql', getUser, userQueryVal);
+      if ('name' in userStatus.user) {
         location.href = '/control';
       }
     } catch (error) {
